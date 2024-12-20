@@ -2,6 +2,7 @@ import { registerUser, loginUser } from '../models/userModel.js';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { User } from '../models/userModel.js';
 
 dotenv.config();
 const jwtkey = process.env.jwtkey;
@@ -70,7 +71,7 @@ export async function afterLogin(req, res, next) {
         if (err) {
             return res.status(401).json({ message: 'token錯誤' });
         }
-        req.user = payload.user;
+        req.user = new User(payload.user.name, payload.user.email, payload.user.user_id);
         next();
     });
     // payload = {
@@ -78,14 +79,14 @@ export async function afterLogin(req, res, next) {
     //         "name": "rutile",
     //         "email": "hoho@example.com",
     //         "point": 100,
-    //         "user_id":token
+    //         "user_id":id
     //     }
 }
 
 router.get('/tokenTest', afterLogin, (req, res) => {
     res.json({
-        userName: req.user.name,
-        userMail: req.user.email,
+        user: req.user,
+        是否為類別型態: req.user instanceof User,
         success: true
     });
 })

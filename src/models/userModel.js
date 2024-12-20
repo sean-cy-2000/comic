@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import psql from '../db.js';
-class User {
+export class User {
     constructor(name, email, id) {
         this.name = name;
         this.email = email;
