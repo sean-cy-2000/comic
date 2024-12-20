@@ -1,0 +1,12 @@
+# POST http://localhost:3000/user/login
+# Content-Type: application/json
+
+# {
+#    "email": "hoho@example.com",
+#    "password": "password"
+# }
+
+
+
+GET http://localhost:3000/user/tokenTest
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJydXRpbGUiLCJlbWFpbCI6ImhvaG9AZXhhbXBsZS5jb20iLCJwb2ludCI6MTAwLCJ1c2VyX2lkIjoiNWQwMzU4NTUtN2ZjYi00ZDlkLTk3NTgtYjgyYTNmMDE2MzFjIn0sImlhdCI6MTczNDcwNjMxOSwiZXhwIjoxNzM0NzA2OTE5fQ.xPqZLUpYeNTEz6JEw3WLkukr9jCPNV5OVdbEGIWJsJ8
