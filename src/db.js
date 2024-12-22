@@ -5,7 +5,7 @@ import pg from 'pg';
 dotenv.config();
 
 
-const psql = new pg.Client({
+const psql = new pg.Pool({
     connectionString: process.env.DB,
     ssl: {
         rejectUnauthorized: true
