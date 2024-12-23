@@ -1,25 +1,26 @@
-import { registerUser, loginUser } from '../models/userModel.js';
+import { registerUser, loginUser, User } from '../models/userModel.js';
 import express from 'express';
 import dotenv from 'dotenv';
+import { after } from 'node:test';
+import { afterLogin } from './userController.js';
 
 const router = express.Router();
 export { router as actionRouter };
 
-router.unlock = async function unlock(req, res) {
+router.post('/unlock/:chapter_id', afterLogin, async function unlock(req, res) {
     try {
-        const { chapterNumber_id } = req.body;
-        const result = await loginUser(email, password);
-        if (result.success) {
-            jwt.sign({ user: result.user },
-                jwtkey,
-                { expiresIn: '10m' },
-                (err, token) => {
-                    res.json({ user: result.user, token, success: true });
-                });
+        const { chapter_id } = req.params;
+        const user = new User(
+            req.user.name,
+            req.user.email,
+            req.user.user_id
+        );
+        const result = await user.unlockChapter(chapter_id);
+        if (result) {
+            res.json({ message: '解鎖成功', success: true });
         }
         else {
-            console.log('登入失敗:\n', result);
-            return res.status(400).json({ message: result.message, 登入失敗 });
+            res.json({ message: '解鎖失敗', success: false });
         }
     } catch (err) {
         console.error(`
@@ -29,4 +30,4 @@ router.unlock = async function unlock(req, res) {
             `);
         res.status(500).json({ message: err.message });
     }
-}
+});

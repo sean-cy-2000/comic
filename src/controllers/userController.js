@@ -1,8 +1,7 @@
-import { registerUser, loginUser } from '../models/userModel.js';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { User } from '../models/userModel.js';
+import { User, registerUser, loginUser } from '../models/userModel';
 
 dotenv.config();
 const jwtkey = process.env.jwtkey;
@@ -60,20 +59,26 @@ router.post('/login', async function login(req, res) {
 });
 
 /**
- * 登入確認中間件
- * @param {*} next - req.user
- */
+ * 登入確認中間件, 把token解析成user
+ * @req_user = {
+ * name , email , point , user_id
+ * }
+*/
 export async function afterLogin(req, res, next) {
-    const headers = req.headers;
-    const token = headers['authorization'].split(' ')[1];
-    if (!token) { return res.status(401).json({ message: '沒有token' }); }
-    jwt.verify(token, jwtkey, (err, payload) => {
-        if (err) {
-            return res.status(401).json({ message: 'token錯誤' });
-        }
-        req.user = new User(payload.user.name, payload.user.email, payload.user.user_id);
-        next();
-    });
+    try {
+        const headers = req.headers;
+        const token = headers['authorization'].split(' ')[1];
+        if (!token) { return res.status(401).json({ message: '沒有token' }); }
+        jwt.verify(token, jwtkey, (err, payload) => {
+            if (err) {
+                return res.status(401).json({ message: 'token錯誤' });
+            }
+            req.user = new User(payload.user.name, payload.user.email, payload.user.user_id);
+            next();
+        });
+    } catch (err) {
+        return res.json({ message: '發生錯誤誤' });
+    }
     // payload = {
     //     "user": {
     //         "name": "rutile",
@@ -89,4 +94,4 @@ router.get('/tokenTest', afterLogin, (req, res) => {
         是否為類別型態: req.user instanceof User,
         success: true
     });
-})
+});

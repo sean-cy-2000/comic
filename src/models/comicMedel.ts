@@ -1,7 +1,12 @@
 import psql from '../db.js';
 
 export class Comic {
-    constructor(name, type, author, cover, description) {
+    name: string;
+    type: string;
+    author: string;
+    cover: string;
+    description: string;
+    constructor(name: string, type: string, author: string, cover: string, description: string) {
         this.name = name;
         this.type = type;
         this.author = author;
@@ -9,22 +14,25 @@ export class Comic {
         this.description = description;
     }
 
-    static async getAllComics_id() {
+
+    /**
+     * 取得所有漫畫的 id 和name
+     */
+    static async getAllComics_id_name(): Promise<{ comic_id: string }[]> {
         try {
-            const result = await psql.query('SELECT comic_id FROM comics');
+            const result = await psql.query('SELECT comic_id and name FROM comics');
             return result.rows;
-        } catch (err) {
-            console.error(`
-                錯誤位置: comic.getAllComics_id \n
-                錯誤碼: ${err.code}\n
-                錯誤訊息: ${err.message}\n
-                錯誤詳細: ${err.detail}\n
-                `);
+        } catch (err: any) {
             throw err;
         }
     }
 
-    static async getComic(comic_id) {
+    /**
+     * 獲取某部漫畫的資料
+     * @param comic_id 
+     * @returns 
+     */
+    static async getComic(comic_id: string): Promise<Comic> {
         try {
             const result = await psql.query(
                 'SELECT * FROM comics WHERE comic_id = $1',
@@ -37,17 +45,11 @@ export class Comic {
                 result.rows[0].cover,
                 result.rows[0].description
             );
-        } catch (err) {
-            console.error(`
-                錯誤位置: comic.getComic \n
-                錯誤碼: ${err.code}\n
-                錯誤訊息: ${err.message}\n
-                錯誤詳細: ${err.detail}\n
-                `);
+        } catch (err: any) {
             throw err;
         }
     }
-    static async getChapters(comic_id) {
+    static async getChapters(comic_id: string) {
         const result = await psql.query(
             'SELECT * FROM chapters WHERE comic_id = $1',
             [comic_id]
@@ -56,10 +58,19 @@ export class Comic {
     }
 }
 
-class chapter {
-    constructor(chapterNumber, price = 3) {
+export class chapter {
+    chpater_id: string;
+    comic_id: string;
+    chapterNumber: number;
+    price: number
+
+    constructor(
+        chpater_id: string, comic_id: string,
+        chapterNumber: number, price: number = 3) {
         this.chapterNumber = chapterNumber;
         this.price = price
+        this.chpater_id = chpater_id;
+        this.comic_id = comic_id;
     }
 }
 
