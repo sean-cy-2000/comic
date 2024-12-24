@@ -15,9 +15,31 @@ export class User {
     async unlockChapter(chapterId: string): Promise<boolean> {
         try {
             if (this.point < 3) return false;
-            this.point -= 3;
-            // TODO: 實作解鎖邏輯
-            return true;
+
+            await psql.query('BEGIN');
+
+            try {
+                const unlockResult = await psql.query(
+                    'INSERT INTO unlocked_chapters (user_id, chapter_id) VALUES ($1, $2)',
+                    [this.user_id, chapterId]
+                );
+
+                const pointResult = await psql.query(
+                    'UPDATE users SET points = points - 3 WHERE user_id = $1',
+                    [this.user_id]
+                );
+
+                if (pointResult.rowCount === 1 && unlockResult.rowCount === 1) {
+                    await psql.query('COMMIT');
+                    this.point -= 3; 
+                    return true;
+                }
+                else return false;
+
+            } catch (err) {
+                await psql.query('ROLLBACK');
+                throw err;
+            }
         } catch (err) {
             throw err;
         }

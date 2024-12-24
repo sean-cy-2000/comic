@@ -1,3 +1,4 @@
+# 登入
 POST http://localhost:3000/user/login
 Content-Type: application/json
 
@@ -7,6 +8,23 @@ Content-Type: application/json
 }
 
 ###
-@authToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJydXRpbGUiLCJlbWFpbCI6ImhvaG9AZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiNWQwMzU4NTUtN2ZjYi00ZDlkLTk3NTgtYjgyYTNmMDE2MzFjIiwicG9pbnQiOjEwMH0sImlhdCI6MTczNDg2NTIxMywiZXhwIjoxNzM0ODY1ODEzfQ.5noyzo-Jw2eMN4lbHtwWHOyx3MYXdQ6d0Lehd8CztF4
+@authToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJydXRpbGUiLCJlbWFpbCI6ImhvaG9AZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiNWQwMzU4NTUtN2ZjYi00ZDlkLTk3NTgtYjgyYTNmMDE2MzFjIiwicG9pbnQiOjEwMH0sImlhdCI6MTczNTAyOTYwNiwiZXhwIjoxNzM1MDMwMjA2fQ.BZZ31o29bj4xs-E7gzE70at3ZNWiVqjiDm7gevugZlo
+
+# 測試 token
 GET http://localhost:3000/user/tokenTest
+Authorization: Bearer {{authToken}}
+
+###
+# 解1
+POST http://localhost:3000/action/unlock/266f1012-e175-4378-a34f-deadb574c25d
+Authorization: Bearer {{authToken}}
+
+###
+# 解鎖2
+POST http://localhost:3000/action/unlock/f4d858f3-32d6-442e-9150-ca291617654e
+Authorization: Bearer {{authToken}}
+
+###
+# 解鎖3
+POST http://localhost:3000/action/unlock/f876533f-2d79-45c4-81ff-0f7a748d946c
 Authorization: Bearer {{authToken}}

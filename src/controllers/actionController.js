@@ -1,7 +1,5 @@
-import { registerUser, loginUser, User } from '../models/userModel.js';
+import { User } from '../models/userModel.js';
 import express from 'express';
-import dotenv from 'dotenv';
-import { after } from 'node:test';
 import { afterLogin } from './userController.js';
 
 const router = express.Router();

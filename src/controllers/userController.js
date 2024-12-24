@@ -1,7 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { User } from '../models/userModel';
+import { User, registerUser, loginUser } from '../models/userModel.js';
 
 dotenv.config();
 const jwtkey = process.env.jwtkey;
@@ -18,7 +18,6 @@ router.post('/register', async function register(req, res) {
                 message: result.message,
                 user: result.user
             });
-
         }
         else {
             console.log('註冊失敗:\n', result);
@@ -42,6 +41,13 @@ router.post('/login', async function login(req, res) {
                 jwtkey,
                 { expiresIn: '10m' },
                 (err, token) => {
+                    if (err) {
+                        return res.status(500).json({
+                            success: false,
+                            message: '生成 token 時發生錯誤',
+                            error: err.message
+                        });
+                    }
                     res.json({ user: result.user, token, success: true });
                 });
         }
